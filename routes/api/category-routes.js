@@ -23,10 +23,10 @@ router.get('/', (req, res) => {
 
     res.status(200).json(data);
 
-  }).catch(err => {
+  }).catch(error => {
 
-    console.log(err);
-    res.status(400).json(err);
+    console.log(error);
+    res.status(400).json(error);
 
   });
 
@@ -37,16 +37,13 @@ router.get('/:id', (req, res) => {
   // be sure to include its associated Products
 
   Category.findOne({
-
     where: {
       id: req.params.id
     },
-
     include: {
       model: Product,
-      attributes: ['id', 'product_name']
+      attributes: ['id', 'product_name', 'price', 'stock', 'category_id']
     }
-
 
   }).then(data => {
 
@@ -57,12 +54,13 @@ router.get('/:id', (req, res) => {
     }
     res.status(200).json(data);
 
-  }).catch(err => {
+  }).catch(error => {
 
-    console.log(err);
-    res.status(400).json(err);
+    console.log(error);
+    res.status(400).json(error);
 
   });
+
 
 
 });
@@ -71,13 +69,19 @@ router.post('/', (req, res) => {
   // create a new category
   Category.update({
   category_name: req.body.category_name
-  }).then(data => res.status(200).json(data))
+  }).then(data => {
+    
+    if (data) {
+      res.status(200).json(data);
+    } else {
+      console.log(error);
+    }
+  })
+  .catch(error => {
 
-  .catch(err => {
+    console.log(error);
 
-    console.log(err);
-
-    res.status(400).json(err);
+    res.status(404).json(error);
 
   });
 
@@ -85,10 +89,52 @@ router.post('/', (req, res) => {
 
 router.put('/:id', (req, res) => {
   // update a category by its `id` value
+  Category.update(req.body, {
+    where: {
+      id: req.params.id
+    }
+  }).then(data =>{
+
+
+
+
+
+
+    if (data) {
+      res.status(200).json(data);
+    } else {
+      res.status(404).json({message: 'Search results: N/A'});
+      return;
+    }
+
+
+
+
+
+  }).catch(error => {
+    console.log(error);
+    res.status(400).json(error);
+  });
 });
 
 router.delete('/:id', (req, res) => {
   // delete a category by its `id` value
+  Category.destroy({
+    where: {
+      id: req.params.id
+    }
+  }).then(data => {
+
+    if (data) {
+      res.status(200).json(data);
+    } else {
+      res.status(404).json({message: 'Search: category with the ID. results: none'});
+    }
+    
+  }).catch(error => {
+    console.log(error);
+    res.status(400).json(error);
+  });
 });
 
 module.exports = router;
