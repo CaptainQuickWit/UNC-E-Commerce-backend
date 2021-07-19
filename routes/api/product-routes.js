@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 
   Product.findAll({
 
-    attributes: ['id'
+    attributes: ['id', 'product_name', 'price', 'stock'
   ],
     include: [
       {
@@ -51,7 +51,7 @@ router.get('/:id', (req, res) => {
       id: req.params.id
     },
 
-    attributes: ['id'],
+    attributes: ['id', 'product_name', 'price', 'stock'],
 
     include: [
       {
@@ -125,7 +125,7 @@ router.post('/', (req, res) => {
     .catch((error) => {
 
       console.log(error);
-      
+
       res.status(400).json(error);
     });
 });
