@@ -115,6 +115,7 @@ router.put('/:id', (req, res) => {
 
     if (data) {
       res.status(200).json(data);
+
     } else {
       res.status(404).json({message: 'Search results: N/A'});
       return;
@@ -125,7 +126,10 @@ router.put('/:id', (req, res) => {
 
 
   }).catch(error => {
+    
     console.log(error);
+
+
     res.status(404).json(error);
   });
 });
